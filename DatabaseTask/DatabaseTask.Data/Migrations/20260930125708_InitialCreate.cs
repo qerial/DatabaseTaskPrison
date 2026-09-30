@@ -57,38 +57,6 @@ namespace DatabaseTask.Data.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Shift",
-                columns: table => new
-                {
-                    ShiftID = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Guards_ID = table.Column<int>(type: "int", nullable: false),
-                    Start_Time = table.Column<int>(type: "int", nullable: false),
-                    Finish_Time = table.Column<int>(type: "int", nullable: false),
-                    Date = table.Column<DateTime>(type: "datetime2", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Shift", x => x.ShiftID);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Visitors",
-                columns: table => new
-                {
-                    VisitorID = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Name = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
-                    PersonalNumber = table.Column<int>(type: "int", nullable: false),
-                    TelephoneNumber = table.Column<int>(type: "int", nullable: false),
-                    RelationToPrisoner = table.Column<string>(type: "nvarchar(15)", maxLength: 15, nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Visitors", x => x.VisitorID);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "Block",
                 columns: table => new
                 {
@@ -175,6 +143,29 @@ namespace DatabaseTask.Data.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Shift",
+                columns: table => new
+                {
+                    ShiftID = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Guards_ID = table.Column<int>(type: "int", nullable: false),
+                    GuardsID = table.Column<int>(type: "int", nullable: false),
+                    Start_Time = table.Column<int>(type: "int", nullable: false),
+                    Finish_Time = table.Column<int>(type: "int", nullable: false),
+                    Date = table.Column<DateTime>(type: "datetime2", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Shift", x => x.ShiftID);
+                    table.ForeignKey(
+                        name: "FK_Shift_Guards_GuardsID",
+                        column: x => x.GuardsID,
+                        principalTable: "Guards",
+                        principalColumn: "GuardsID",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Prisoners",
                 columns: table => new
                 {
@@ -188,7 +179,9 @@ namespace DatabaseTask.Data.Migrations
                     PersonalNumber = table.Column<int>(type: "int", nullable: false),
                     ArrivalDate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     PrisonerStatus = table.Column<bool>(type: "bit", nullable: false),
-                    CrimeID = table.Column<int>(type: "int", nullable: false)
+                    VisitorsID = table.Column<int>(type: "int", nullable: false),
+                    CrimeID = table.Column<int>(type: "int", nullable: false),
+                    VisitID = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -219,12 +212,12 @@ namespace DatabaseTask.Data.Migrations
                 {
                     VisitID = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    VisitorsID = table.Column<int>(type: "int", nullable: false),
                     PrisonerID = table.Column<int>(type: "int", nullable: false),
                     Date = table.Column<DateTime>(type: "datetime2", nullable: false),
                     StartTime = table.Column<int>(type: "int", nullable: false),
                     EndTime = table.Column<int>(type: "int", nullable: false),
-                    VisitingStatus = table.Column<string>(type: "nvarchar(60)", maxLength: 60, nullable: false)
+                    VisitingStatus = table.Column<string>(type: "nvarchar(60)", maxLength: 60, nullable: false),
+                    relation_to_the_prisoner = table.Column<string>(type: "nvarchar(max)", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -235,11 +228,28 @@ namespace DatabaseTask.Data.Migrations
                         principalTable: "Prisoners",
                         principalColumn: "PrisonerID",
                         onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Visitors",
+                columns: table => new
+                {
+                    VisitorID = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Name = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
+                    PersonalNumber = table.Column<int>(type: "int", nullable: false),
+                    TelephoneNumber = table.Column<int>(type: "int", nullable: false),
+                    relation_to_the_prisoner = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    VisitID = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Visitors", x => x.VisitorID);
                     table.ForeignKey(
-                        name: "FK_Visit_Visitors_VisitorsID",
-                        column: x => x.VisitorsID,
-                        principalTable: "Visitors",
-                        principalColumn: "VisitorID",
+                        name: "FK_Visitors_Visit_VisitID",
+                        column: x => x.VisitID,
+                        principalTable: "Visit",
+                        principalColumn: "VisitID",
                         onDelete: ReferentialAction.Cascade);
                 });
 
@@ -279,36 +289,91 @@ namespace DatabaseTask.Data.Migrations
                 column: "PunishmentID");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Prisoners_VisitID",
+                table: "Prisoners",
+                column: "VisitID");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Prisoners_VisitorsID",
+                table: "Prisoners",
+                column: "VisitorsID");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Shift_GuardsID",
+                table: "Shift",
+                column: "GuardsID");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Visit_PrisonerID",
                 table: "Visit",
                 column: "PrisonerID");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Visit_VisitorsID",
-                table: "Visit",
-                column: "VisitorsID");
+                name: "IX_Visitors_VisitID",
+                table: "Visitors",
+                column: "VisitID");
+
+            migrationBuilder.AddForeignKey(
+                name: "FK_Prisoners_Visit_VisitID",
+                table: "Prisoners",
+                column: "VisitID",
+                principalTable: "Visit",
+                principalColumn: "VisitID");
+
+            migrationBuilder.AddForeignKey(
+                name: "FK_Prisoners_Visitors_VisitorsID",
+                table: "Prisoners",
+                column: "VisitorsID",
+                principalTable: "Visitors",
+                principalColumn: "VisitorID",
+                onDelete: ReferentialAction.Cascade);
         }
 
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DropTable(
-                name: "Building");
+            migrationBuilder.DropForeignKey(
+                name: "FK_Block_Prison_PrisonID",
+                table: "Block");
+
+            migrationBuilder.DropForeignKey(
+                name: "FK_Chamber_Block_BlockID",
+                table: "Chamber");
+
+            migrationBuilder.DropForeignKey(
+                name: "FK_Prisoners_Chamber_ChamberID",
+                table: "Prisoners");
+
+            migrationBuilder.DropForeignKey(
+                name: "FK_Prisoners_Crime_CrimeID",
+                table: "Prisoners");
+
+            migrationBuilder.DropForeignKey(
+                name: "FK_Prisoners_Punishment_PunishmentID",
+                table: "Prisoners");
+
+            migrationBuilder.DropForeignKey(
+                name: "FK_Prisoners_Visit_VisitID",
+                table: "Prisoners");
+
+            migrationBuilder.DropForeignKey(
+                name: "FK_Visitors_Visit_VisitID",
+                table: "Visitors");
 
             migrationBuilder.DropTable(
-                name: "Guards");
+                name: "Building");
 
             migrationBuilder.DropTable(
                 name: "Shift");
 
             migrationBuilder.DropTable(
-                name: "Visit");
+                name: "Guards");
 
             migrationBuilder.DropTable(
-                name: "Prisoners");
+                name: "Prison");
 
             migrationBuilder.DropTable(
-                name: "Visitors");
+                name: "Block");
 
             migrationBuilder.DropTable(
                 name: "Chamber");
@@ -320,10 +385,13 @@ namespace DatabaseTask.Data.Migrations
                 name: "Punishment");
 
             migrationBuilder.DropTable(
-                name: "Block");
+                name: "Visit");
 
             migrationBuilder.DropTable(
-                name: "Prison");
+                name: "Prisoners");
+
+            migrationBuilder.DropTable(
+                name: "Visitors");
         }
     }
 }

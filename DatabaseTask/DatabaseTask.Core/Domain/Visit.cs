@@ -11,10 +11,6 @@ namespace DatabaseTask.Core.Domain
     {
         [Key]
         public int VisitID { get; set; }
-
-        public int VisitorsID { get; set; }
-        public Visitors Visitors { get; set; }
-
         public int PrisonerID { get; set; }
         public Prisoners Prisoner { get; set; }
 
@@ -24,5 +20,8 @@ namespace DatabaseTask.Core.Domain
 
         [MaxLength(60)]
         public string VisitingStatus { get; set; }
+        public string relation_to_the_prisoner { get; set; }
+        public ICollection<Prisoners> Prisoners { get; set; } = new List<Prisoners>();
+        public ICollection<Visitors> Visitors { get; set; } = new List<Visitors>();
     }
 }

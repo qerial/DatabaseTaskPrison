@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DatabaseTask.Data.Migrations
 {
     [DbContext(typeof(DatabaseTaskDbContext))]
-    [Migration("20260925101901_InitialCreate")]
+    [Migration("20260930125708_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -226,6 +226,12 @@ namespace DatabaseTask.Data.Migrations
                     b.Property<int>("PunishmentID")
                         .HasColumnType("int");
 
+                    b.Property<int?>("VisitID")
+                        .HasColumnType("int");
+
+                    b.Property<int>("VisitorsID")
+                        .HasColumnType("int");
+
                     b.HasKey("PrisonerID");
 
                     b.HasIndex("ChamberID");
@@ -233,6 +239,10 @@ namespace DatabaseTask.Data.Migrations
                     b.HasIndex("CrimeID");
 
                     b.HasIndex("PunishmentID");
+
+                    b.HasIndex("VisitID");
+
+                    b.HasIndex("VisitorsID");
 
                     b.ToTable("Prisoners");
                 });
@@ -275,6 +285,9 @@ namespace DatabaseTask.Data.Migrations
                     b.Property<int>("Finish_Time")
                         .HasColumnType("int");
 
+                    b.Property<int>("GuardsID")
+                        .HasColumnType("int");
+
                     b.Property<int>("Guards_ID")
                         .HasColumnType("int");
 
@@ -282,6 +295,8 @@ namespace DatabaseTask.Data.Migrations
                         .HasColumnType("int");
 
                     b.HasKey("ShiftID");
+
+                    b.HasIndex("GuardsID");
 
                     b.ToTable("Shift");
                 });
@@ -311,14 +326,13 @@ namespace DatabaseTask.Data.Migrations
                         .HasMaxLength(60)
                         .HasColumnType("nvarchar(60)");
 
-                    b.Property<int>("VisitorsID")
-                        .HasColumnType("int");
+                    b.Property<string>("relation_to_the_prisoner")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("VisitID");
 
                     b.HasIndex("PrisonerID");
-
-                    b.HasIndex("VisitorsID");
 
                     b.ToTable("Visit");
                 });
@@ -339,15 +353,19 @@ namespace DatabaseTask.Data.Migrations
                     b.Property<int>("PersonalNumber")
                         .HasColumnType("int");
 
-                    b.Property<string>("RelationToPrisoner")
-                        .IsRequired()
-                        .HasMaxLength(15)
-                        .HasColumnType("nvarchar(15)");
-
                     b.Property<int>("TelephoneNumber")
                         .HasColumnType("int");
 
+                    b.Property<int>("VisitID")
+                        .HasColumnType("int");
+
+                    b.Property<string>("relation_to_the_prisoner")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.HasKey("VisitorID");
+
+                    b.HasIndex("VisitID");
 
                     b.ToTable("Visitors");
                 });
@@ -416,11 +434,34 @@ namespace DatabaseTask.Data.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("DatabaseTask.Core.Domain.Visit", null)
+                        .WithMany("Prisoners")
+                        .HasForeignKey("VisitID");
+
+                    b.HasOne("DatabaseTask.Core.Domain.Visitors", "visitors")
+                        .WithMany("Prisoners")
+                        .HasForeignKey("VisitorsID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.Navigation("Chamber");
 
                     b.Navigation("Crime");
 
                     b.Navigation("Punishment");
+
+                    b.Navigation("visitors");
+                });
+
+            modelBuilder.Entity("DatabaseTask.Core.Domain.Shift", b =>
+                {
+                    b.HasOne("DatabaseTask.Core.Domain.Guards", "guards")
+                        .WithMany()
+                        .HasForeignKey("GuardsID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("guards");
                 });
 
             modelBuilder.Entity("DatabaseTask.Core.Domain.Visit", b =>
@@ -431,15 +472,18 @@ namespace DatabaseTask.Data.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("DatabaseTask.Core.Domain.Visitors", "Visitors")
-                        .WithMany()
-                        .HasForeignKey("VisitorsID")
+                    b.Navigation("Prisoner");
+                });
+
+            modelBuilder.Entity("DatabaseTask.Core.Domain.Visitors", b =>
+                {
+                    b.HasOne("DatabaseTask.Core.Domain.Visit", "Visit")
+                        .WithMany("Visitors")
+                        .HasForeignKey("VisitID")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Prisoner");
-
-                    b.Navigation("Visitors");
+                    b.Navigation("Visit");
                 });
 
             modelBuilder.Entity("DatabaseTask.Core.Domain.Prison", b =>
@@ -449,6 +493,18 @@ namespace DatabaseTask.Data.Migrations
                     b.Navigation("Building");
 
                     b.Navigation("Guards");
+                });
+
+            modelBuilder.Entity("DatabaseTask.Core.Domain.Visit", b =>
+                {
+                    b.Navigation("Prisoners");
+
+                    b.Navigation("Visitors");
+                });
+
+            modelBuilder.Entity("DatabaseTask.Core.Domain.Visitors", b =>
+                {
+                    b.Navigation("Prisoners");
                 });
 #pragma warning restore 612, 618
         }

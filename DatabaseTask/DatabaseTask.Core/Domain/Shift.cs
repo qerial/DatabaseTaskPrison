@@ -14,6 +14,7 @@ namespace DatabaseTask.Core.Domain
         public int ShiftID { get; set; }
 
         public int Guards_ID { get; set; }
+        public Guards guards { get; set; }
 
         public int Start_Time { get; set; }
 
