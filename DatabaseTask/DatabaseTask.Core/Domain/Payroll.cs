@@ -7,12 +7,12 @@ using System.Threading.Tasks;
 
 namespace DatabaseTask.Core.Domain
 {
-    public class Building
+    public class Payroll
     {
         [Key]
-        public int BuildingsID { get; set; }
-
-        public int PrisonID { get; set; }
-        public Prison Prison { get; set; }
+        public Guid Id { get; set; }
+        public float Sum { get; set; }
+        public DateTime Date  { get; set; }
+        public Employee Employee { get; set; }
     }
 }
