@@ -16,6 +16,7 @@ namespace DatabaseTask.Core.Domain
         public string PaymentMethod { get; set; }
         public Guid? EmployeeId { get; set; }
         public Guid? GuestId { get; set; }
+        public Guid? PayerID { get; set; }
         public Guid? BookingId { get; set; }
 
         public Booking Booking { get; set; }
