@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DatabaseTask.Data.Migrations
 {
     [DbContext(typeof(DatabaseTaskDbContext))]
-    [Migration("20261002125737_InitialCreate")]
+    [Migration("20261007115402_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -31,19 +31,18 @@ namespace DatabaseTask.Data.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid>("BookingId")
+                    b.Property<Guid?>("BookingId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("ExtraInfo")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<Guid>("RoomId")
+                    b.Property<Guid?>("RoomId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<string>("Status")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<int>("Status")
+                        .HasColumnType("int");
 
                     b.HasKey("Id");
 
@@ -63,10 +62,16 @@ namespace DatabaseTask.Data.Migrations
                     b.Property<DateTime>("ArrivalDate")
                         .HasColumnType("datetime2");
 
+                    b.Property<float>("Cost")
+                        .HasColumnType("real");
+
                     b.Property<DateTime>("DepartureDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<Guid>("EmployeeId")
+                    b.Property<Guid?>("EmployeeId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid?>("GuestId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<Guid>("GuestsId")
@@ -79,9 +84,8 @@ namespace DatabaseTask.Data.Migrations
                     b.Property<int>("PeopleCount")
                         .HasColumnType("int");
 
-                    b.Property<string>("RoomAmmount")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<int>("RoomAmount")
+                        .HasColumnType("int");
 
                     b.HasKey("Id");
 
@@ -113,10 +117,14 @@ namespace DatabaseTask.Data.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<Guid>("HotelId")
+                    b.Property<Guid?>("HotelId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<string>("LastName")
+                    b.Property<string>("Lastname")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("PersonalId")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
@@ -127,15 +135,14 @@ namespace DatabaseTask.Data.Migrations
                     b.Property<DateTime>("StartDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<string>("Telephone")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<int>("TelephoneNumber")
+                        .HasColumnType("int");
 
                     b.HasKey("Id");
 
                     b.HasIndex("HotelId");
 
-                    b.ToTable("Employee");
+                    b.ToTable("Employees");
                 });
 
             modelBuilder.Entity("DatabaseTask.Core.Domain.Guests", b =>
@@ -160,15 +167,20 @@ namespace DatabaseTask.Data.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<Guid>("PaymentId")
+                        .HasColumnType("uniqueidentifier");
+
                     b.Property<string>("PersonalId")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Telephone")
+                    b.Property<string>("TelephoneNumber")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("PaymentId");
 
                     b.ToTable("Guests");
                 });
@@ -191,9 +203,6 @@ namespace DatabaseTask.Data.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("MyProperty")
-                        .HasColumnType("int");
-
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -205,12 +214,11 @@ namespace DatabaseTask.Data.Migrations
                     b.Property<DateTime>("RegistrationDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<int>("RoomAmmount")
+                    b.Property<int>("RoomAmount")
                         .HasColumnType("int");
 
-                    b.Property<string>("Telephone")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<int>("Telephone")
+                        .HasColumnType("int");
 
                     b.HasKey("Id");
 
@@ -223,16 +231,16 @@ namespace DatabaseTask.Data.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<float>("Ammount")
+                    b.Property<float>("Amount")
                         .HasColumnType("real");
 
-                    b.Property<Guid>("BookingId")
+                    b.Property<Guid?>("BookingId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid>("EmployeeId")
+                    b.Property<Guid?>("EmployeeId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid>("GuestsId")
+                    b.Property<Guid?>("GuestId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<float>("PaymentDate")
@@ -248,9 +256,7 @@ namespace DatabaseTask.Data.Migrations
 
                     b.HasIndex("EmployeeId");
 
-                    b.HasIndex("GuestsId");
-
-                    b.ToTable("Payment");
+                    b.ToTable("Payments");
                 });
 
             modelBuilder.Entity("DatabaseTask.Core.Domain.Payroll", b =>
@@ -259,14 +265,14 @@ namespace DatabaseTask.Data.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<DateTime>("Date")
-                        .HasColumnType("datetime2");
-
-                    b.Property<Guid>("EmployeeId")
+                    b.Property<Guid?>("EmployeeId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<float>("Sum")
                         .HasColumnType("real");
+
+                    b.Property<DateTime>("date")
+                        .HasColumnType("datetime2");
 
                     b.HasKey("Id");
 
@@ -316,17 +322,13 @@ namespace DatabaseTask.Data.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid>("BookingId")
+                    b.Property<Guid?>("BookingId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<DateTime>("Date")
                         .HasColumnType("datetime2");
 
-                    b.Property<string>("Description")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<Guid>("ServicesId")
+                    b.Property<Guid?>("ServicesId")
                         .HasColumnType("uniqueidentifier");
 
                     b.HasKey("Id");
@@ -357,22 +359,18 @@ namespace DatabaseTask.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Services");
+                    b.ToTable("Service");
                 });
 
             modelBuilder.Entity("DatabaseTask.Core.Domain.Bookable", b =>
                 {
                     b.HasOne("DatabaseTask.Core.Domain.Booking", "Booking")
-                        .WithMany()
-                        .HasForeignKey("BookingId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .WithMany("Bookables")
+                        .HasForeignKey("BookingId");
 
                     b.HasOne("DatabaseTask.Core.Domain.Room", "Room")
-                        .WithMany()
-                        .HasForeignKey("RoomId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .WithMany("Bookables")
+                        .HasForeignKey("RoomId");
 
                     b.Navigation("Booking");
 
@@ -383,12 +381,10 @@ namespace DatabaseTask.Data.Migrations
                 {
                     b.HasOne("DatabaseTask.Core.Domain.Employee", "Employee")
                         .WithMany()
-                        .HasForeignKey("EmployeeId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("EmployeeId");
 
                     b.HasOne("DatabaseTask.Core.Domain.Guests", "Guests")
-                        .WithMany()
+                        .WithMany("Bookings")
                         .HasForeignKey("GuestsId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -401,48 +397,43 @@ namespace DatabaseTask.Data.Migrations
             modelBuilder.Entity("DatabaseTask.Core.Domain.Employee", b =>
                 {
                     b.HasOne("DatabaseTask.Core.Domain.Hotel", "Hotel")
-                        .WithMany()
-                        .HasForeignKey("HotelId")
+                        .WithMany("Employees")
+                        .HasForeignKey("HotelId");
+
+                    b.Navigation("Hotel");
+                });
+
+            modelBuilder.Entity("DatabaseTask.Core.Domain.Guests", b =>
+                {
+                    b.HasOne("DatabaseTask.Core.Domain.Payment", "Payment")
+                        .WithMany("Guests")
+                        .HasForeignKey("PaymentId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Hotel");
+                    b.Navigation("Payment");
                 });
 
             modelBuilder.Entity("DatabaseTask.Core.Domain.Payment", b =>
                 {
                     b.HasOne("DatabaseTask.Core.Domain.Booking", "Booking")
-                        .WithMany()
-                        .HasForeignKey("BookingId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .WithMany("Payments")
+                        .HasForeignKey("BookingId");
 
                     b.HasOne("DatabaseTask.Core.Domain.Employee", "Employee")
-                        .WithMany()
-                        .HasForeignKey("EmployeeId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("DatabaseTask.Core.Domain.Guests", "Guests")
-                        .WithMany()
-                        .HasForeignKey("GuestsId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .WithMany("Payments")
+                        .HasForeignKey("EmployeeId");
 
                     b.Navigation("Booking");
 
                     b.Navigation("Employee");
-
-                    b.Navigation("Guests");
                 });
 
             modelBuilder.Entity("DatabaseTask.Core.Domain.Payroll", b =>
                 {
                     b.HasOne("DatabaseTask.Core.Domain.Employee", "Employee")
-                        .WithMany()
-                        .HasForeignKey("EmployeeId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .WithMany("Payrolls")
+                        .HasForeignKey("EmployeeId");
 
                     b.Navigation("Employee");
                 });
@@ -450,20 +441,57 @@ namespace DatabaseTask.Data.Migrations
             modelBuilder.Entity("DatabaseTask.Core.Domain.ServiceOrder", b =>
                 {
                     b.HasOne("DatabaseTask.Core.Domain.Booking", "Booking")
-                        .WithMany()
-                        .HasForeignKey("BookingId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .WithMany("ServiceOrders")
+                        .HasForeignKey("BookingId");
 
                     b.HasOne("DatabaseTask.Core.Domain.Services", "Services")
-                        .WithMany()
-                        .HasForeignKey("ServicesId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .WithMany("ServiceOrders")
+                        .HasForeignKey("ServicesId");
 
                     b.Navigation("Booking");
 
                     b.Navigation("Services");
+                });
+
+            modelBuilder.Entity("DatabaseTask.Core.Domain.Booking", b =>
+                {
+                    b.Navigation("Bookables");
+
+                    b.Navigation("Payments");
+
+                    b.Navigation("ServiceOrders");
+                });
+
+            modelBuilder.Entity("DatabaseTask.Core.Domain.Employee", b =>
+                {
+                    b.Navigation("Payments");
+
+                    b.Navigation("Payrolls");
+                });
+
+            modelBuilder.Entity("DatabaseTask.Core.Domain.Guests", b =>
+                {
+                    b.Navigation("Bookings");
+                });
+
+            modelBuilder.Entity("DatabaseTask.Core.Domain.Hotel", b =>
+                {
+                    b.Navigation("Employees");
+                });
+
+            modelBuilder.Entity("DatabaseTask.Core.Domain.Payment", b =>
+                {
+                    b.Navigation("Guests");
+                });
+
+            modelBuilder.Entity("DatabaseTask.Core.Domain.Room", b =>
+                {
+                    b.Navigation("Bookables");
+                });
+
+            modelBuilder.Entity("DatabaseTask.Core.Domain.Services", b =>
+                {
+                    b.Navigation("ServiceOrders");
                 });
 #pragma warning restore 612, 618
         }

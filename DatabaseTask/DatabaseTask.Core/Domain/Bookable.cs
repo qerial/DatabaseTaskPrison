@@ -12,8 +12,11 @@ namespace DatabaseTask.Core.Domain
         [Key]
         public Guid Id { get; set; }
         public string ExtraInfo { get; set; }
-        public string Status { get; set; }
-        public Booking Booking { get; set; }
+        public int Status { get; set; }
+        public Guid? BookingId { get; set; }
+        public Guid? RoomId { get; set; }
+
         public Room Room { get; set; }
+        public Booking Booking { get; set; }
     }
 }
