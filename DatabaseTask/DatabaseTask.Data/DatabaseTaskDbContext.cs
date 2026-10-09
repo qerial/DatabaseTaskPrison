@@ -9,15 +9,17 @@ namespace DatabaseTask.Data
         public DatabaseTaskDbContext(DbContextOptions<DatabaseTaskDbContext> options)
             : base(options) { }
 
-        public DbSet<Bookable> Bookable { get; set; }
-        public DbSet<Booking> Booking { get; set; }
-        public DbSet<Employee> Employees { get; set; }
-        public DbSet<Guests> Guests { get; set; }
-        public DbSet<Hotel> Hotel { get; set; }
-        public DbSet<Payment> Payments { get; set; }
-        public DbSet<Payroll> Payroll { get; set; }
-        public DbSet<Room> Room { get; set; }
-        public DbSet<Services> Service { get; set; }
-        public DbSet<ServiceOrder> ServiceOrder { get; set; }
+        public DbSet<Aircraft> Aircraft { get; set; }
+        public DbSet<Airline> Airline { get; set; }
+        public DbSet<Employee> Employee { get; set; }
+        public DbSet<Airport> Airport { get; set; }
+        public DbSet<Baggage> Baggage { get; set; }
+        public DbSet<BaggageType> BaggageType { get; set; }
+        public DbSet<Flight> Flight { get; set; }
+        public DbSet<FlightStatus> FlightStatus { get; set; }
+        public DbSet<Gate> Gate { get; set; }
+        public DbSet<Passenger> Passenger { get; set; }
+        public DbSet<Registration> Registration { get; set; }
+        public DbSet<Terminal> Terminal { get; set; }
     }
 }

@@ -7,14 +7,14 @@ using System.Threading.Tasks;
 
 namespace DatabaseTask.Core.Domain
 {
-    public class Payroll
+    public class FlightStatus
     {
         [Key]
         public Guid Id { get; set; }
-        public Guid? EmployeeId { get; set; }
-        public float Sum { get; set; }
-        public DateTime date { get; set; }
-
-        public Employee Employee { get; set; }
+        public Guid? FlightID { get; set; }
+        public string StatusChange { get; set; }
+        public DateOnly ChangeTime { get; set; }
+        public string ChangeReason { get; set; }
+        public Flight flight { get; set; }
     }
 }

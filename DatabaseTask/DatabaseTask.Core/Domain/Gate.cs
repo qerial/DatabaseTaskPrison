@@ -7,15 +7,14 @@ using System.Threading.Tasks;
 
 namespace DatabaseTask.Core.Domain
 {
-    public class ServiceOrder
+    public class Gate
     {
         [Key]
         public Guid Id { get; set; }
-        public Guid? ServicesId { get; set; }
-        public Guid? BookingId { get; set; }
-        public DateTime Date { get; set; }
-
-        public Booking Booking { get; set; }
-        public Services Services { get; set; }
+        public Guid? TerminalID { get; set; }
+        public int GateNr { get; set; }
+        public int MaxPlaneSize { get; set; }
+        public string Location { get; set; }
+        public Terminal Terminal { get; set; }
     }
 }

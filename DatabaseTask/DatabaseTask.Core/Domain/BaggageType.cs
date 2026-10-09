@@ -7,14 +7,12 @@ using System.Threading.Tasks;
 
 namespace DatabaseTask.Core.Domain
 {
-    public class Services
+    public class BaggageType
     {
         [Key]
         public Guid Id { get; set; }
-        public string ServiceType { get; set; }
-        public float Price { get; set; }
-        public string Description { get; set; }
-
-        public ICollection<ServiceOrder> ServiceOrders { get; set; } = new List<ServiceOrder>();
+        public Guid? PassangerID { get; set; }
+        public Guid? FlightID { get; set; }
+        public Passenger Passenger { get; set; }
     }
 }

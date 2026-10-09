@@ -7,15 +7,17 @@ using System.Threading.Tasks;
 
 namespace DatabaseTask.Core.Domain
 {
-    public class Employee
+    public class Terminal
     {
         [Key]
         public Guid Id { get; set; }
-        public Guid? TerminalID { get; set; }
+        public int Number { get; set; }
         public string Name { get; set; }
-        public int EmployeeNumber { get; set; }
-        public string Phone { get; set; }
-        public string Position { get; set; }
-        public Terminal Terminal { get; set; }
+        public string Location { get; set; }
+        public Employee Employee { get; set; }
+        public ICollection<Gate> Gate { get; set; } = new List<Gate>();
+        public Airport Airport { get; set; }
+
+
     }
 }
